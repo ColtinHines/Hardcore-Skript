@@ -1,0 +1,43 @@
+#-------------------------
+
+#     Hardcore By Mims
+#           v1.0
+
+#-------------------------
+
+
+options:
+    version: 1.0
+
+variables:
+    {lives} = 3
+
+on load:
+    set {_lifeapple} to enchanted golden apple named "&a+1 Apple"
+    register new shaped recipe for {_lifeapple} named "&a+1 Apple" using diamond block, emerald block, diamond block, emerald block, golden apple, emerald block, diamond block, emerald block and diamond block with id "life_apple"
+
+on consume of enchanted golden apple:
+    if name of event-itemtype contains "&a+1 Apple":
+        cancel event
+        add 1 to {lives}
+        send title "%player% has consumed a +1 Apple." with subtitle "You now have %{lives}% lives" to all players for 3 seconds
+
+on death of player:
+    set {deadplayer} to player
+    remove 1 from {lives}
+    if {lives} = 0:
+        clear inventory of all players
+        set gamemode of all players to adventure
+        send title "You have run out of lives" with subtitle "do /resetlives to restart" to player for 5 seconds
+    else if {lives} > 0:
+        send title "%{deadplayer}% has died" with subtitle "You now have %{lives}% live(s) left" to all players for 3 seconds
+
+
+command /lives:
+    trigger:
+        send "You have %{lives}% lives remaining" to player
+
+command /resetlives [<number=3>]:
+    trigger:
+        set {lives} to arg 1
+        broadcast "Lives have been reset, you now have %arg 1% lives"
